@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-users"></i> Customers</h5>
+                <p class="card-text">Manage your customer database</p>
+                <a href="{{ url_for('list_customers') }}" class="btn btn-primary">View Customers</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-box"></i> Products</h5>
+                <p class="card-text">Manage your product catalog</p>
+                <a href="{{ url_for('list_products') }}" class="btn btn-primary">View Products</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-file-invoice"></i> Quotations</h5>
+                <p class="card-text">Create and manage quotations</p>
+                <a href="{{ url_for('list_quotations') }}" class="btn btn-primary">View Quotations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-file-invoice-dollar"></i> Invoices</h5>
+                <p class="card-text">Generate and track invoices</p>
+                <a href="{{ url_for('list_invoices') }}" class="btn btn-primary">View Invoices</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-shopping-cart"></i> Purchases</h5>
+                <p class="card-text">Manage purchase orders</p>
+                <a href="#" class="btn btn-primary">View Purchases</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

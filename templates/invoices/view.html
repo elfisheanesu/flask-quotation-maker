@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3>Invoice #INV{{ invoice.id }}</h3>
+                <div>
+                    <a href="{{ url_for('download_invoice', id=invoice.id) }}" class="btn btn-info">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                    <a href="{{ url_for('list_invoices') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+                        <h6 class="mb-3">From:</h6>
+                        <div>
+                            <strong>Your Company Name</strong>
+                        </div>
+                        <div>123 Business Street</div>
+                        <div>Business City, 12345</div>
+                        <div>Email: contact@company.com</div>
+                        <div>Phone: (123) 456-7890</div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <h6 class="mb-3">Bill To:</h6>
+                        <div>
+                            <strong>{{ invoice.quotation.customer.name }}</strong>
+                        </div>
+                        <div>{{ invoice.quotation.customer.address or 'N/A' }}</div>
+                        <div>Email: {{ invoice.quotation.customer.email or 'N/A' }}</div>
+                        <div>Phone: {{ invoice.quotation.customer.phone or 'N/A' }}</div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+                        <div class="mb-2">
+                            <strong>Invoice Date:</strong> {{ invoice.date.strftime('%Y-%m-%d') }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>Due Date:</strong> {{ invoice.due_date.strftime('%Y-%m-%d') }}
+                        </div>
+                        <div>
+                            <strong>Status:</strong>
+                            <span class="badge bg-{{ 'success' if invoice.status == 'paid' else 'warning' }}">
+                                {{ invoice.status }}
+                            </span>
+                        </div>
+                    </div>
+                    {% if invoice.status == 'unpaid' %}
+                    <div class="col-sm-6 text-end">
+                        <form action="{{ url_for('mark_invoice_paid', id=invoice.id) }}" method="POST">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check"></i> Mark as Paid
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in invoice.quotation.items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ "%.2f"|format(item.unit_price) }}</td>
+                                <td>${{ "%.2f"|format(item.unit_price * item.quantity) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total:</td>
+                                <td class="fw-bold">${{ "%.2f"|format(invoice.quotation.total) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-8">
+                        <h6>Payment Information:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Bank Name:</th>
+                                    <td>Your Bank</td>
+                                </tr>
+                                <tr>
+                                    <th>Account Name:</th>
+                                    <td>Your Company Name</td>
+                                </tr>
+                                <tr>
+                                    <th>Account Number:</th>
+                                    <td>XXXX-XXXX-XXXX-XXXX</td>
+                                </tr>
+                                <tr>
+                                    <th>Sort Code:</th>
+                                    <td>XX-XX-XX</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Related Quotation</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Quotation Number:</strong> #Q{{ invoice.quotation.id }}</p>
+                <p><strong>Date:</strong> {{ invoice.quotation.date.strftime('%Y-%m-%d') }}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="badge bg-{{ 'success' if invoice.quotation.status == 'approved' else 'warning' }}">
+                        {{ invoice.quotation.status }}
+                    </span>
+                </p>
+                <a href="{{ url_for('view_quotation', id=invoice.quotation.id) }}" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> View Quotation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

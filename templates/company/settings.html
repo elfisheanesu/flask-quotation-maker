@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Company Settings</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data" class="mt-4">
+                {{ form.hidden_tag() }}
+                
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Company Information</h5>
+                        
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.street_address.label(class="form-label") }}
+                            {{ form.street_address(class="form-control") }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.city.label(class="form-label") }}
+                                    {{ form.city(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.postal_code.label(class="form-label") }}
+                                    {{ form.postal_code(class="form-control") }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control") }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Company Logo</h5>
+                        
+                        {% if company.logo_filename %}
+                        <div class="mb-3">
+                            <img src="{{ url_for('static', filename='uploads/' + company.logo_filename) }}" 
+                                 alt="Company Logo" 
+                                 class="img-thumbnail mb-3" 
+                                 style="max-width: 200px;">
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            {{ form.logo.label(class="form-label") }}
+                            {{ form.logo(class="form-control") }}
+                            <small class="text-muted">Supported formats: PNG, JPG, JPEG, GIF</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Preview</h5>
+                    <div class="company-preview">
+                        {% if company.logo_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + company.logo_filename) }}" 
+                             alt="Company Logo" 
+                             class="img-thumbnail mb-3" 
+                             style="max-width: 150px;">
+                        {% endif %}
+                        <h6>{{ company.name }}</h6>
+                        <p class="mb-1">{{ company.street_address }}</p>
+                        <p class="mb-1">{{ company.city }}, {{ company.postal_code }}</p>
+                        <p class="mb-1">Email: {{ company.email }}</p>
+                        <p class="mb-1">Phone: {{ company.phone }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

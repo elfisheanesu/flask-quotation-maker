@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3>Purchase Order #PO{{ purchase.id }}</h3>
+                <div>
+                    {% if purchase.status == 'pending' %}
+                    <a href="{{ url_for('edit_purchase', id=purchase.id) }}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <form action="{{ url_for('receive_purchase', id=purchase.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Mark as Received
+                        </button>
+                    </form>
+                    {% endif %}
+                    <a href="{{ url_for('list_purchases') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in purchase.items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>${{ "%.2f"|format(item.unit_price) }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ "%.2f"|format(item.unit_price * item.quantity) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total:</td>
+                                <td class="fw-bold">${{ "%.2f"|format(purchase.total) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Purchase Order Details</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>PO Number:</strong> PO{{ purchase.id }}</p>
+                <p><strong>Date:</strong> {{ purchase.date.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Supplier:</strong> {{ purchase.supplier }}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="badge bg-{{ 'success' if purchase.status == 'received' else 'warning' }}">
+                        {{ purchase.status }}
+                    </span>
+                </p>
+                <p><strong>Created By:</strong> {{ purchase.created_by.username }}</p>
+                <p><strong>Created At:</strong> {{ purchase.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                {% if purchase.received_at %}
+                <p><strong>Received At:</strong> {{ purchase.received_at.strftime('%Y-%m-d %H:%M:%S') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
